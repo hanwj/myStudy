@@ -1,0 +1,7 @@
+!.gitignore
+*.opensdf
+*.sdf
+*.v11.suo
+*.pyc
+openGL/project/openGl01/Debug/
+openGL/project/openGlTest/Debug/
