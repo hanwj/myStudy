@@ -1,17 +1,20 @@
-#include <GLTools.h>
-#include <GLShaderManager.h>
-
-#define FREEGLUT_STATIC
-#include <GL/glut.h>
-
-#include <time.h>
-#include <math.h>
+//#include <GLTools.h>
 #include "GLFixedRender.h"
 
-#define ColorVertex(c,v) do {glColor3fv(c);glVertex3fv(v);} while (0);
+static const char *szIdentityShaderVP = "attribute vec4 vVertex;"
+										"void main(void)"
+										"{gl_Position = vVertex;}";
+static const char* szIdentityShaderFP = 
+#ifdef OPENGL_ES
+										"precision mediump float;"
+#endif
+										"uniform vec4 vColor;"
+										"void main(void)"
+										"{gl_FragColor = vColor;}";
 
-GLBatch triangleBatch;
-GLShaderManager shaderManager;
+GLuint identityShader = loadShaderPairSrcWithAttribute(szIdentityShaderVP,szIdentityShaderFP,1,0,"vVertex");
+
+GLuint vertextArrayObject;
 
 void changeSize(int w,int h)
 {
@@ -23,7 +26,7 @@ void setupRC()
 {
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 
-	shaderManager.InitializeStockShaders();
+	//shaderManager.InitializeStockShaders();
 	
 	GLfloat vVerts[] = {-0.5f,0.0f, 0.0f,
 						0.5f, 0.0f, 0.0f,
@@ -32,9 +35,11 @@ void setupRC()
 	triangleBatch.CopyVertexData3f(vVerts);
 	triangleBatch.End();*/
 
-	GLuint vertextArrayObject;
+#ifndef OPENGL_ES
+	//GLuint vertextArrayObject;
 	glGenVertexArrays(1,&vertextArrayObject);
 	glBindVertexArray(vertextArrayObject);
+#endif
 
 	GLuint vertexArray;
 	GLuint numVerts = 3;
@@ -42,6 +47,17 @@ void setupRC()
 	glBindBuffer(GL_ARRAY_BUFFER,vertexArray);
 	glBufferData(GL_ARRAY_BUFFER,sizeof(GLfloat) * 3 * numVerts,vVerts,GL_DYNAMIC_DRAW);
 
+#ifndef OPENGL_ES
+	glBindVertexArray(vertextArrayObject);
+#endif
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER,vertexArray);
+	glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,0);
+
+#ifndef OPENGL_ES
+	glBindVertexArray(0);
+#endif
 
 }
 
@@ -67,7 +83,21 @@ void renderScene()
 	//testSphere();
 	//testLight();
 	//testCircle(30);
-	testList();
+	//testList();
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER|GL_STENCIL_BUFFER);
+	GLfloat vRed[] = {1.0f,0.0f,0.0f,1.0f};
+	glUseProgram(identityShader);
+	GLint iColor = glGetUniformLocation(identityShader,"vColor");
+	glUniform4fv(iColor,1,vRed);
+
+#ifndef OPENGL_ES
+	glBindVertexArray(vertextArrayObject);
+#endif
+	glDrawArrays(GL_TRIANGLES,0,3);
+#ifndef OPENGL_ES
+	glBindVertexArray(0);
+#endif
+
 }
 static int day = 20;
 void idleFunc()
@@ -82,7 +112,7 @@ void idleFunc()
 
 int main(int argc,char* argv[])
 {
-	gltSetWorkingDirectory(argv[0]);
+	//gltSetWorkingDirectory(argv[0]);
 
 	glutInit(&argc,argv);
 	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH|GLUT_STENCIL);
@@ -96,7 +126,7 @@ int main(int argc,char* argv[])
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
-		fprintf(stderr,"GLEW ERROR: %s\n",glewGetErrorString(err));
+		//fprintf(stderr,"GLEW ERROR: %s\n",glewGetErrorString(err));
 		return 1;
 	}
 

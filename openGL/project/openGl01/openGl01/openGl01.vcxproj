@@ -76,6 +76,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="glew.c" />
     <ClCompile Include="GLFixedRender.cpp" />
     <ClCompile Include="GLUtils.cpp" />
     <ClCompile Include="triangle.cpp" />
@@ -87,6 +88,9 @@
   <ItemGroup>
     <ClInclude Include="GLFixedRender.h" />
     <ClInclude Include="GLUtils.h" />
+    <ClInclude Include="GL\glew.h" />
+    <ClInclude Include="GL\glxew.h" />
+    <ClInclude Include="GL\wglew.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

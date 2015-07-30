@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <time.h>
+#include <math.h>
 #include "GLUtils.h"
 
 void testFillMode();
