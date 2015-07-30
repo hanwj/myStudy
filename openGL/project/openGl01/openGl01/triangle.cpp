@@ -12,7 +12,7 @@ static const char* szIdentityShaderFP =
 										"void main(void)"
 										"{gl_FragColor = vColor;}";
 
-GLuint identityShader = loadShaderPairSrcWithAttribute(szIdentityShaderVP,szIdentityShaderFP,1,0,"vVertex");
+GLuint identityShader;
 
 GLuint vertextArrayObject;
 
@@ -27,7 +27,7 @@ void setupRC()
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 
 	//shaderManager.InitializeStockShaders();
-	
+	identityShader = loadShaderPairSrcWithAttribute(szIdentityShaderVP,szIdentityShaderFP,1,0,"vVertex");
 	GLfloat vVerts[] = {-0.5f,0.0f, 0.0f,
 						0.5f, 0.0f, 0.0f,
 						0.0f, 0.5f, 0.0f};
@@ -97,7 +97,7 @@ void renderScene()
 #ifndef OPENGL_ES
 	glBindVertexArray(0);
 #endif
-
+	glutSwapBuffers();
 }
 static int day = 20;
 void idleFunc()
