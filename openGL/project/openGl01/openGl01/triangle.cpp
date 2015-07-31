@@ -97,8 +97,10 @@ void renderScene()
 #ifndef OPENGL_ES
 	glBindVertexArray(0);
 #endif
+
 	glutSwapBuffers();
 }
+
 static int day = 20;
 void idleFunc()
 {
