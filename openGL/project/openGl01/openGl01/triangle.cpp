@@ -112,6 +112,14 @@ void idleFunc()
 	renderScene();
 }
 
+void specialKey(int key,int x,int y)
+{
+	//响应按键和鼠标操作
+
+
+	glutPostRedisplay(); //强制更新窗口
+}
+
 int main(int argc,char* argv[])
 {
 	//gltSetWorkingDirectory(argv[0]);
@@ -124,7 +132,7 @@ int main(int argc,char* argv[])
 	glutReshapeFunc(changeSize);
 	glutDisplayFunc(renderScene);
 	//glutIdleFunc(idleFunc);
-
+	glutSpecialFunc(specialKey);
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
